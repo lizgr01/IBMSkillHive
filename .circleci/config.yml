@@ -4,7 +4,7 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-      - deploy_firebase:
+      - deploy_firebase: # Corrected indentation here
           requires:
             - build
           filters:
@@ -44,27 +44,27 @@ jobs:
           path: path/to/report
           destination: report
 
-deploy_firebase:
-  machine:
-    image: circleci/classic:latest
-  steps:
-    - checkout
+  deploy_firebase:
+    machine:
+      image: circleci/classic:latest
+    steps:
+      - checkout
 
-    - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
 
-    - run:
-        name: Install dependencies
-        command: npm ci
+      - run:
+          name: Install dependencies
+          command: npm ci
 
-    - run:
-        name: Build
-        command: npm run build
+      - run:
+          name: Build
+          command: npm run build
 
-    - run:
-        name: Deploy to Firebase Hosting
-        command: |
-          npm install -g firebase-tools
-          firebase deploy --token $FIREBASE_TOKEN --project ibmskillhive --channel live
+      - run:
+          name: Deploy to Firebase Hosting
+          command: |
+            npm install -g firebase-tools
+            firebase deploy --token $FIREBASE_TOKEN --project ibmskillhive --channel live
